@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Monitor is a worker that executes SQLs and sends metrics.
-type Monitor struct {
+// Checker is a worker that executes SQLs and sends metrics.
+type Checker struct {
 	db     *sql.DB
 	statsd *statsd.Client
 }
@@ -26,23 +26,23 @@ type result struct {
 	metrics []metric
 }
 
-// NewMonitor returns an instance of Monitor.
-func NewMonitor(db *sql.DB, statsd *statsd.Client) *Monitor {
-	return &Monitor{
+// NewChecker returns an instance of Checker.
+func NewChecker(db *sql.DB, statsd *statsd.Client) *Checker {
+	return &Checker{
 		db:     db,
 		statsd: statsd,
 	}
 }
 
 // Run processes the monitoring task queue enqueued by the Scheduler.
-func (m *Monitor) Run(q chan Rule) {
-	log.Printf("monitor: start")
+func (m *Checker) Run(q chan Rule) {
+	log.Printf("checker: start")
 
 	for {
 		select {
 		case rule := <-q:
 			// dequeue the task and check.
-			log.Printf("monitor: check: %s", rule.Name)
+			log.Printf("checker: check: %s", rule.Name)
 			err := m.check(rule)
 			if err != nil {
 				// Currently, there is no way to notify errors.
@@ -54,7 +54,7 @@ func (m *Monitor) Run(q chan Rule) {
 }
 
 // check gets the metrics and sends them.
-func (m *Monitor) check(rule Rule) error {
+func (m *Checker) check(rule Rule) error {
 	result, err := m.get(rule)
 	if err != nil {
 		return err
@@ -63,11 +63,11 @@ func (m *Monitor) check(rule Rule) error {
 }
 
 // get queries the database to generate metrics.
-func (m *Monitor) get(rule Rule) (result, error) {
+func (m *Checker) get(rule Rule) (result, error) {
 	r := result{}
 
 	// Execute the SQL.
-	log.Printf("monitor: query: %s", rule.Query)
+	log.Printf("checker: query: %s", rule.Query)
 	rows, err := m.db.Query(rule.Query)
 	if err != nil {
 		return r, errors.Wrapf(err, "failed to query: %s", rule.Query)
@@ -108,10 +108,10 @@ func (m *Monitor) get(rule Rule) (result, error) {
 }
 
 // put sends metrics to the dogstatsd.
-func (m *Monitor) put(r result) error {
+func (m *Checker) put(r result) error {
 	// For each metric.
 	for _, metric := range r.metrics {
-		log.Printf("monitor: put: %s(%s) = %v\n", metric.name, metric.tags, metric.value)
+		log.Printf("checker: put: %s(%s) = %v\n", metric.name, metric.tags, metric.value)
 
 		// Send a metic to the dogstatsd.
 		err := m.statsd.Gauge(metric.name, metric.value, metric.tags, 1)

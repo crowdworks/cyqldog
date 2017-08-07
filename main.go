@@ -56,7 +56,7 @@ func run(configPath string) {
 	// Make a monitoring worker.
 	// In order to limit the number of DB connection to 1 for monitoring,
 	// only one worker should run.
-	m := cyqldog.NewMonitor(db, statsd)
+	m := cyqldog.NewChecker(db, statsd)
 	go m.Run(q)
 
 	// Trap signals from OS for normal termination.
