@@ -26,16 +26,16 @@ type result struct {
 	metrics []metric
 }
 
-// NewChecker returns an instance of Checker.
-func NewChecker(db *sql.DB, statsd *statsd.Client) *Checker {
+// newChecker returns an instance of Checker.
+func newChecker(db *sql.DB, statsd *statsd.Client) *Checker {
 	return &Checker{
 		db:     db,
 		statsd: statsd,
 	}
 }
 
-// Run processes the monitoring task queue enqueued by the Scheduler.
-func (m *Checker) Run(q chan Rule) {
+// run processes the monitoring task queue enqueued by the Scheduler.
+func (m *Checker) run(q chan Rule) {
 	log.Printf("checker: start")
 
 	for {

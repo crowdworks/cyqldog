@@ -11,16 +11,16 @@ type Scheduler struct {
 	rule Rule
 }
 
-// NewScheduler returns an instance of Scheduler.
-func NewScheduler(id int, rule Rule) *Scheduler {
+// newScheduler returns an instance of Scheduler.
+func newScheduler(id int, rule Rule) *Scheduler {
 	return &Scheduler{
 		id:   id,
 		rule: rule,
 	}
 }
 
-// Run periodically generates monitoring tasks according to the rule.
-func (s *Scheduler) Run(q chan Rule) {
+// run periodically generates monitoring tasks according to the rule.
+func (s *Scheduler) run(q chan Rule) {
 	log.Printf("scheduler(%d): start", s.id)
 
 	// Generate trigger periodically.

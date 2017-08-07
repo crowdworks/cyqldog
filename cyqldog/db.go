@@ -27,9 +27,9 @@ type DataSource struct {
 	Sslmode string `yaml:"sslmode"`
 }
 
-// NewDB returns an instance of sql.DB.
+// newDB returns an instance of sql.DB.
 // This function returns a error if the connection test fails.
-func NewDB(s DataSource) (*sql.DB, error) {
+func newDB(s DataSource) (*sql.DB, error) {
 	dataSourceName := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		s.Host, s.Port, s.User, s.Password, s.Dbname, s.Sslmode,

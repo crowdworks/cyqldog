@@ -19,8 +19,8 @@ type Dogstatsd struct {
 	Tags []string `yaml:"tags"`
 }
 
-// NewStatsd returns an instance of statsd.Client.
-func NewStatsd(d Dogstatsd) (*statsd.Client, error) {
+// newStatsd returns an instance of statsd.Client.
+func newStatsd(d Dogstatsd) (*statsd.Client, error) {
 	address := fmt.Sprintf("%s:%s", d.Host, d.Port)
 	c, err := statsd.New(address)
 	if err != nil {

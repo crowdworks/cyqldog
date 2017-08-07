@@ -21,8 +21,8 @@ type Config struct {
 	Rules []Rule `yaml:"rules"`
 }
 
-// NewConfig returns an instance of the Config.
-func NewConfig(filename string) (*Config, error) {
+// newConfig returns an instance of the Config.
+func newConfig(filename string) (*Config, error) {
 	// Read bytes from file.
 	buf, err := ioutil.ReadFile(filename)
 	if err != nil {
