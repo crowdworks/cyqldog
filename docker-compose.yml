@@ -1,0 +1,23 @@
+version: '2'
+services:
+  storage-postgres:
+    image: busybox
+    volumes:
+      - /var/lib/postgresql/data
+
+  postgres:
+    image: postgres:alpine
+    volumes_from:
+      - storage-postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+  dogstatsd:
+    image: datadog/docker-dd-agent:11.0.5141-dogstatsd-alpine
+    ports:
+      - "8125:8125/udp"
+    environment:
+      DD_API_KEY: "${DD_API_KEY}"
+

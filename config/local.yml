@@ -1,0 +1,32 @@
+db:
+  driver: postgres
+  host: {{ .DB_HOST }}
+  port: 5432
+  user: postgres
+  password: {{ .DB_PASSWORD }}
+  dbname: postgres
+  sslmode: disable
+
+dogstatsd:
+  host: {{ .DD_HOST }}
+  port: 8125
+  namespace: playground.cyqldog
+  tags:
+    - "env:local"
+    - "source:{{ .DB_HOST }}"
+
+rules:
+  - name: test1
+    interval: 5s
+    query: "SELECT COUNT(*) AS count FROM table1"
+    value_cols:
+      - count
+  - name: test2
+    interval: 10s
+    query: "SELECT tag1, val1, tag2, val2 FROM table1"
+    tag_cols:
+      - tag1
+      - tag2
+    value_cols:
+      - val1
+      - val2

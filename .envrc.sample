@@ -1,0 +1,5 @@
+export DB_HOST=192.168.99.100
+export DB_PASSWORD=password
+
+export DD_HOST=192.168.99.100
+export DD_API_KEY=XXXX
