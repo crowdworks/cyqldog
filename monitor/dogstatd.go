@@ -7,13 +7,19 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Dogstatsd is a configuration of the dogstatsd to connect.
 type Dogstatsd struct {
-	Host      string   `yaml:"host"`
-	Port      string   `yaml:"port"`
-	Namespace string   `yaml:"namespace"`
-	Tags      []string `yaml:"tags"`
+	// Host is a hostname or IP address of the dogstatsd.
+	Host string `yaml:"host"`
+	// Port is a port number of the dogstatsd.
+	Port string `yaml:"port"`
+	// Namespace to prepend to all statsd calls
+	Namespace string `yaml:"namespace"`
+	// Tags are global tags to be added to every statsd call
+	Tags []string `yaml:"tags"`
 }
 
+// NewStatsd returns an instance of statsd.Client.
 func NewStatsd(d Dogstatsd) (*statsd.Client, error) {
 	address := fmt.Sprintf("%s:%s", d.Host, d.Port)
 	c, err := statsd.New(address)
