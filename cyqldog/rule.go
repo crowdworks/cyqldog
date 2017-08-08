@@ -10,7 +10,7 @@ import (
 type Rule struct {
 	// Name of the rule.
 	// The metic name sent to the dogstatsd is:
-	//   Dogstatsd.Namespace + Rule.Name + Rule.ValueCols[*}
+	//   Dogstatsd.Namespace + Rule.Name + Rule.ValueCols[*]
 	Name string `yaml:"name"`
 	// Interval of the monitoring.
 	Interval time.Duration `yaml:"interval"`
