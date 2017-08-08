@@ -10,6 +10,3 @@ FROM alpine:3.6
 WORKDIR /app
 COPY --from=builder /go/src/github.com/crowdworks/cyqldog/bin/cyqldog ./
 COPY --from=builder /go/src/github.com/crowdworks/cyqldog/config/ ./config/
-ENTRYPOINT ["./cyqldog"]
-
-

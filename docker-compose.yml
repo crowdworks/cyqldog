@@ -24,7 +24,7 @@ services:
   # For Dockerfile test
   # cyqldog:
   #   build: .
-  #   command: ["-C", "config/local.yml"]
+  #   command: ["./cyqldog", "-C", "config/local.yml"]
   #   links:
   #     - postgres:postgres
   #     - dogstatsd:dogstatsd
