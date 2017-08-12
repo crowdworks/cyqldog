@@ -13,7 +13,7 @@ func main() {
 
 	// Parse the argument's flag.
 	var configPath string
-	flag.StringVar(&configPath, "C", "./config/local.yml", "path to config file")
+	flag.StringVar(&configPath, "C", "./cyqldog.yml", "path to config file")
 	flag.Parse()
 
 	m := cyqldog.NewMonitor(configPath)
