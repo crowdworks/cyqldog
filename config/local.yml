@@ -3,9 +3,9 @@ db:
   options:
     host: {{ .DB_HOST }}
     port: 5432
-    user: postgres
+    user: cyqldog
     password: {{ .DB_PASSWORD }}
-    dbname: postgres
+    dbname: cyqldogdb
     sslmode: disable
 
 dogstatsd:

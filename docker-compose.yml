@@ -4,6 +4,10 @@ services:
     image: busybox
     volumes:
       - /var/lib/postgresql/data
+  storage-mysql:
+    image: busybox
+    volumes:
+      - /var/lib/mysql
 
   postgres:
     image: postgres:alpine
@@ -12,8 +16,20 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: "postgres"
+      POSTGRES_USER: "cyqldog"
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "cyqldogdb"
+  mysql:
+    image: mysql:5.6
+    volumes_from:
+      - storage-mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_USER: "cyqldog"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "cyqldogdb"
   dogstatsd:
     image: datadog/docker-dd-agent:11.0.5141-dogstatsd-alpine
     ports:
