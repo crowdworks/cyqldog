@@ -1,6 +1,7 @@
 package cyqldog
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/pkg/errors"
@@ -37,6 +38,14 @@ func (r *Rule) buildMetrics(row []interface{}, cols []string) ([]metric, error) 
 				values = append(values, f)
 			case int64: // integer
 				values = append(values, float64(f))
+			case []uint8:
+				// The mysql driver always returns []unit8,
+				// so we need to parse it manually.
+				f64, err := strconv.ParseFloat(string(f), 64)
+				if err != nil {
+					return metrics, errors.Wrapf(err, "failed to ParseFloat: col = %s, type = %T(%v)", cols[i], c, c)
+				}
+				values = append(values, f64)
 			default:
 				return metrics, errors.Errorf("failed to cast from interface to float64: col = %s, type = %T(%v)", cols[i], c, c)
 			}

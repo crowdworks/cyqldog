@@ -10,7 +10,7 @@ db:
 dogstatsd:
   host: {{ .DD_HOST }}
   port: 8125
-  namespace: playground.cyqldog
+  namespace: playground.cyqldog.mysql
   tags:
     - "env:local"
     - "source:{{ .DB_HOST }}"

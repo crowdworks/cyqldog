@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/crowdworks/cyqldog/cyqldog"
+	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
 
