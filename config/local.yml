@@ -1,11 +1,12 @@
 db:
   driver: postgres
-  host: {{ .DB_HOST }}
-  port: 5432
-  user: postgres
-  password: {{ .DB_PASSWORD }}
-  dbname: postgres
-  sslmode: disable
+  options:
+    host: {{ .DB_HOST }}
+    port: 5432
+    user: postgres
+    password: {{ .DB_PASSWORD }}
+    dbname: postgres
+    sslmode: disable
 
 dogstatsd:
   host: {{ .DD_HOST }}
