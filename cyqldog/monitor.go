@@ -29,11 +29,11 @@ func (m *Monitor) Run() error {
 	}
 
 	// Connect to the database.
-	db, err := newDB(config.Db)
+	ds, err := newDB(config.DB)
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer ds.Close()
 
 	// Connect to the dogstatsd.
 	statsd, err := newStatsd(config.Statd)
@@ -53,7 +53,7 @@ func (m *Monitor) Run() error {
 	// Make a monitoring worker.
 	// In order to limit the number of DB connection to 1 for monitoring,
 	// only one worker should run.
-	c := newChecker(db, statsd)
+	c := newChecker(ds, statsd)
 	go c.run(q)
 
 	// Trap signals from OS for normal termination.

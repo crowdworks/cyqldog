@@ -14,7 +14,7 @@ import (
 // Config represents the structure of the configuration file.
 type Config struct {
 	// Db is a configuration of the database to connect.
-	Db DataSourceConfig `yaml:"data_source"`
+	DB DataSourceConfig `yaml:"data_source"`
 	// Statsd is a configuration of the dogstatsd to connect.
 	Statd Dogstatsd `yaml:"dogstatsd"`
 	// Rules are a list of rules to monitor

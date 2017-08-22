@@ -1,12 +1,17 @@
 package cyqldog
 
 import (
-	"database/sql"
 	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
 )
+
+// DataSource is an interface from which to get metrics.
+type DataSource interface {
+	Get(rule Rule) (result, error)
+	Close() error
+}
 
 // DataSourceConfig is a configuration of the database to connect.
 type DataSourceConfig struct {
@@ -23,32 +28,6 @@ type DataSourceConfig struct {
 
 // DataSourceOptions is a map of options to connect.
 type DataSourceOptions map[string]string
-
-// newDB returns an instance of sql.DB.
-// This function returns a error if the connection test fails.
-func newDB(s DataSourceConfig) (*sql.DB, error) {
-
-	// Join the options into a string of data source name.
-	dataSourceName, err := s.getDataSourceName()
-	if err != nil {
-		return nil, err
-	}
-
-	// Open the database.
-	// Note that network connection is not established at this time.
-	db, err := sql.Open(s.Driver, dataSourceName)
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to open database")
-	}
-
-	// Connect to the database and verify its connection.
-	if err = db.Ping(); err != nil {
-		db.Close()
-
-		return nil, errors.Wrapf(err, "failed to connect database")
-	}
-	return db, nil
-}
 
 // getDataSourceName returns a data source name to use for sql.Open.
 func (s *DataSourceConfig) getDataSourceName() (string, error) {
