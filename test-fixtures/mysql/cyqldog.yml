@@ -1,4 +1,4 @@
-db:
+data_source:
   driver: mysql
   options:
     host: {{ .DB_HOST }}
