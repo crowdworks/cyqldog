@@ -58,13 +58,19 @@ func (c *Checker) check(rule Rule) error {
 	if err != nil {
 		return err
 	}
-	return c.put(result)
+	return c.Put(result, rule)
 }
 
-// put sends metrics to the dogstatsd.
-func (c *Checker) put(r result) error {
+// Put sends metrics to the dogstatsd.
+func (c *Checker) Put(qr QueryResult, rule Rule) error {
+	// convert to the query result to metrics.
+	metrics, err := buildMetricsForQueryResult(qr, rule)
+	if err != nil {
+		return err
+	}
+
 	// For each metric.
-	for _, metric := range r.metrics {
+	for _, metric := range metrics {
 		log.Printf("checker: put: %s(%s) = %v\n", metric.name, metric.tags, metric.value)
 
 		// Send a metic to the dogstatsd.

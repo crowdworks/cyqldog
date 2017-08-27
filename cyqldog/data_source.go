@@ -9,8 +9,16 @@ import (
 
 // DataSource is an interface from which to get metrics.
 type DataSource interface {
-	Get(rule Rule) (result, error)
+	Get(rule Rule) (QueryResult, error)
 	Close() error
+}
+
+// Record is a map of column / value pairs representing one row.
+type Record map[string]string
+
+// QueryResult has multiple records.
+type QueryResult struct {
+	Records []Record
 }
 
 // DataSourceConfig is a configuration of the database to connect.

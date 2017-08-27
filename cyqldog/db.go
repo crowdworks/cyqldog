@@ -2,6 +2,7 @@ package cyqldog
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/pkg/errors"
@@ -40,21 +41,21 @@ func newDB(s DataSourceConfig) (DataSource, error) {
 }
 
 // Get queries the database to generate metrics.
-func (d *DB) Get(rule Rule) (result, error) {
-	r := result{}
+func (d *DB) Get(rule Rule) (QueryResult, error) {
+	qr := QueryResult{}
 
 	// Execute the SQL.
 	log.Printf("db: query: %s", rule.Query)
 	rows, err := d.db.Query(rule.Query)
 	if err != nil {
-		return r, errors.Wrapf(err, "failed to query: %s", rule.Query)
+		return qr, errors.Wrapf(err, "failed to query: %s", rule.Query)
 	}
 	defer rows.Close()
 
 	// Get columns to map metric values and tags.
 	cols, err := rows.Columns()
 	if err != nil {
-		return r, errors.Wrapf(err, "failed to get column names: %s", rule.Query)
+		return qr, errors.Wrapf(err, "failed to get column names: %s", rule.Query)
 	}
 
 	// For each rows.
@@ -69,19 +70,53 @@ func (d *DB) Get(rule Rule) (result, error) {
 		}
 		err := rows.Scan(rowPtr...)
 		if err != nil {
-			return r, errors.Wrapf(err, "failed to scan value: %s", rule.Query)
+			return qr, errors.Wrapf(err, "failed to scan value: %s", rule.Query)
 		}
 
-		// Convert the row to metrics.
-		metrics, err := rule.buildMetrics(row, cols)
+		// Convert the row to record.
+		record, err := buildRecord(row, cols)
 		if err != nil {
-			return r, err
+			return qr, err
 		}
 
-		// Add metrics to the result.
-		r.metrics = append(r.metrics, metrics...)
+		// Add the record to the result.
+		qr.Records = append(qr.Records, record)
 	}
-	return r, err
+
+	return qr, nil
+}
+
+// buildRecord converts a row to record.
+// The record stores all data as a string to generalize how to handle data at notifications.
+func buildRecord(row []interface{}, cols []string) (Record, error) {
+	record := make(Record, len(cols))
+
+	for i, c := range row {
+		s, err := convertToString(c)
+		if err != nil {
+			return record, errors.Wrapf(err, "failt to convertToString: col = %s, type = %T(%v)", cols[i], c, c)
+		}
+
+		record[cols[i]] = s
+	}
+
+	return record, nil
+}
+
+// convertToString casts interface to string.
+func convertToString(i interface{}) (string, error) {
+	switch s := i.(type) {
+	case string:
+		return s, nil
+	case []uint8:
+		return string(s), nil
+	case int64:
+		return fmt.Sprintf("%d", s), nil
+	case float64:
+		return fmt.Sprintf("%f", s), nil
+	default:
+		return "", errors.New("failed to cast interface to string")
+	}
 }
 
 // Close closes the database connection.
