@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// DataSource is an interface from which to get metrics.
+// DataSource is an interface which get metrics from.
 type DataSource interface {
 	Get(rule Rule) (QueryResult, error)
 	Close() error

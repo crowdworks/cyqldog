@@ -15,17 +15,17 @@ type DB struct {
 
 // newDB returns an instance of DataSource interface.
 // This function returns a error if the connection test fails.
-func newDB(s DataSourceConfig) (DataSource, error) {
+func newDB(c DataSourceConfig) (DataSource, error) {
 
 	// Join the options into a string of data source name.
-	dataSourceName, err := s.getDataSourceName()
+	dataSourceName, err := c.getDataSourceName()
 	if err != nil {
 		return nil, err
 	}
 
 	// Open the database.
 	// Note that network connection is not established at this time.
-	db, err := sql.Open(s.Driver, dataSourceName)
+	db, err := sql.Open(c.Driver, dataSourceName)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to open database")
 	}

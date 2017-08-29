@@ -1,16 +1,11 @@
 package cyqldog
 
-import (
-	"log"
-
-	"github.com/DataDog/datadog-go/statsd"
-	"github.com/pkg/errors"
-)
+import "log"
 
 // Checker is a worker that executes SQLs and sends metrics.
 type Checker struct {
-	ds     DataSource
-	statsd *statsd.Client
+	ds        DataSource
+	notifiers Notifiers
 }
 
 // metric represents a measured value.
@@ -26,10 +21,10 @@ type result struct {
 }
 
 // newChecker returns an instance of Checker.
-func newChecker(ds DataSource, statsd *statsd.Client) *Checker {
+func newChecker(ds DataSource, notifiers Notifiers) *Checker {
 	return &Checker{
-		ds:     ds,
-		statsd: statsd,
+		ds:        ds,
+		notifiers: notifiers,
 	}
 }
 
@@ -58,26 +53,5 @@ func (c *Checker) check(rule Rule) error {
 	if err != nil {
 		return err
 	}
-	return c.Put(result, rule)
-}
-
-// Put sends metrics to the dogstatsd.
-func (c *Checker) Put(qr QueryResult, rule Rule) error {
-	// convert to the query result to metrics.
-	metrics, err := buildMetricsForQueryResult(qr, rule)
-	if err != nil {
-		return err
-	}
-
-	// For each metric.
-	for _, metric := range metrics {
-		log.Printf("checker: put: %s(%s) = %v\n", metric.name, metric.tags, metric.value)
-
-		// Send a metic to the dogstatsd.
-		err := c.statsd.Gauge(metric.name, metric.value, metric.tags, 1)
-		if err != nil {
-			return errors.Wrapf(err, "failed to gauge statsd for name = %s, value = %v, tags = %v", metric.name, metric.value, metric.tags)
-		}
-	}
-	return nil
+	return c.notifiers[rule.Notifier].Put(result, rule)
 }

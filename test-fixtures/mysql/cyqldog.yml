@@ -7,23 +7,26 @@ data_source:
     password: {{ .DB_PASSWORD }}
     dbname: cyqldogdb
 
-dogstatsd:
-  host: {{ .DD_HOST }}
-  port: 8125
-  namespace: playground.cyqldog.mysql
-  tags:
-    - "env:local"
-    - "source:{{ .DB_HOST }}"
+notifiers:
+  dogstatsd:
+    host: {{ .DD_HOST }}
+    port: 8125
+    namespace: playground.cyqldog.mysql
+    tags:
+      - "env:local"
+      - "source:{{ .DB_HOST }}"
 
 rules:
   - name: test1
     interval: 5s
     query: "SELECT COUNT(*) AS count FROM table1"
+    notifier: dogstatsd
     value_cols:
       - count
   - name: test2
     interval: 10s
     query: "SELECT tag1, val1, tag2, val2 FROM table1"
+    notifier: dogstatsd
     tag_cols:
       - tag1
       - tag2
