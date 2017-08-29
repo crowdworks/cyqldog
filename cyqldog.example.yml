@@ -1,4 +1,4 @@
-db:
+data_source:
   driver: postgres
   options:
     host: {{ .DB_HOST }}
