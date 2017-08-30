@@ -9,8 +9,15 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var (
+	// Version information embedded at build time.
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
-	log.Println("main: start")
+	log.Printf("main: starting cyqldog (version: %s, commit: %s, date: %s)", version, commit, date)
 
 	// Parse the argument's flag.
 	var configPath string
