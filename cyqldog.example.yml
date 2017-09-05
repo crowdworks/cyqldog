@@ -18,7 +18,7 @@ data_source:
     # https://godoc.org/github.com/lib/pq
     #
     # The host to connect to. Values that start with / are for unix domain sockets. (default is localhost)
-    host: {{ .DB_HOST }}
+    host: db.example.com
     # The port to bind to. (default is 5432)
     port: 5432
     # The user to sign in as
@@ -61,7 +61,7 @@ notifiers:
     # Tags are global tags to be added to every statsd call
     tags:
       - "env:local"
-      - "source:{{ .DB_HOST }}"
+      - "source:db.example.com"
 
 # Rules are a list of rules to monitor.
 rules:
