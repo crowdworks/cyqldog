@@ -5,6 +5,46 @@ import (
 	"testing"
 )
 
+func TestNewConfig(t *testing.T) {
+	cases := []struct {
+		in string
+		ok bool
+	}{
+		{
+			in: "test-fixtures/postgres/cyqldog.yml",
+			ok: true,
+		},
+		{
+			in: "test-fixtures/mysql/cyqldog.yml",
+			ok: true,
+		},
+		{
+			in: "test-fixtures/no_such_file.yml",
+			ok: false,
+		},
+		{
+			in: "test-fixtures/postgres/cyqldog_ng1.yml",
+			ok: false,
+		},
+		{
+			in: "test-fixtures/postgres/cyqldog_ng2.yml",
+			ok: false,
+		},
+	}
+
+	for _, tc := range cases {
+		_, err := newConfig(tc.in)
+
+		if tc.ok && err != nil {
+			t.Errorf("newConfig(%s) returns unexpected error: %+v", tc.in, err)
+		}
+
+		if !tc.ok && err == nil {
+			t.Errorf("expected newConfig(%s) returns error, but err == nil", tc.in)
+		}
+	}
+}
+
 func TestRenderEnv(t *testing.T) {
 	cases := []struct {
 		in  []byte
