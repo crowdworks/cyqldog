@@ -1,7 +1,7 @@
 # cyqldog
 [![CircleCI](https://circleci.com/gh/crowdworks/cyqldog.svg?style=svg)](https://circleci.com/gh/crowdworks/cyqldog)
 [![GitHub release](http://img.shields.io/github/release/crowdworks/cyqldog.svg?style=flat-square)](https://github.com/crowdworks/cyqldog/releases)
-[![GoDoc](https://godoc.org/github.com/crowdworks/cyqldog/deploy?status.svg)](https://godoc.org/github.com/crowdworks/cyqldog/deploy)
+[![GoDoc](https://godoc.org/github.com/crowdworks/cyqldog/cyqldog?status.svg)](https://godoc.org/github.com/crowdworks/cyqldog/cyqldog)
 
 A monitoring tool for periodically executing SQLs and sending metrics to Datadog.
 
@@ -146,7 +146,7 @@ rules:
 
 # Contributions
 
-Any feedback and contributions are welcome. Feel free to report an issue and submit a pull request.
+Any feedback and contributions are welcome. Feel free to open an issue and submit a pull request.
 
 # License
 
