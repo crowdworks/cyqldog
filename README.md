@@ -1,4 +1,7 @@
 # cyqldog
+[![CircleCI](https://circleci.com/gh/crowdworks/cyqldog.svg?style=svg)](https://circleci.com/gh/crowdworks/cyqldog)
+[![GitHub release](http://img.shields.io/github/release/crowdworks/cyqldog.svg?style=flat-square)](https://github.com/crowdworks/cyqldog/releases)
+[![GoDoc](https://godoc.org/github.com/crowdworks/cyqldog/deploy?status.svg)](https://godoc.org/github.com/crowdworks/cyqldog/deploy)
 
 A monitoring tool for periodically executing SQLs and sending metrics to Datadog.
 
