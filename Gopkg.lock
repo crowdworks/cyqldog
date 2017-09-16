@@ -26,6 +26,12 @@
   version = "v0.8.0"
 
 [[projects]]
+  name = "gopkg.in/DATA-DOG/go-sqlmock.v1"
+  packages = ["."]
+  revision = "b983233bc0bbea4dc6e8ec8c8c923d935765ffec"
+  version = "v1.2.0"
+
+[[projects]]
   branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -34,6 +40,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "26ca8d63ead63b2fa3736ad5ebbc53445e0388d3f16abefd4d477829a0811e08"
+  inputs-digest = "97a0cfb2e1df6facc4e14e7b2ebe1d6fca79dfee867c288cd95c1450b210fc9c"
   solver-name = "gps-cdcl"
   solver-version = 1
