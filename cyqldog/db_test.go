@@ -51,9 +51,9 @@ func TestDBGet(t *testing.T) {
 			},
 			out: QueryResult{
 				Records: []Record{
-					{"tag1": "hoge1", "val1": "1", "tag2": "fuga1", "val2": "0.100000"},
-					{"tag1": "hoge1", "val1": "2", "tag2": "fuga2", "val2": "0.200000"},
-					{"tag1": "hoge3", "val1": "3", "tag2": "fuga3", "val2": "0.300000"},
+					{"tag1": "hoge1", "val1": "1", "tag2": "fuga1", "val2": "0.1"},
+					{"tag1": "hoge1", "val1": "2", "tag2": "fuga2", "val2": "0.2"},
+					{"tag1": "hoge3", "val1": "3", "tag2": "fuga3", "val2": "0.3"},
 				},
 			},
 		},

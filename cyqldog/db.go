@@ -113,7 +113,8 @@ func convertToString(i interface{}) (string, error) {
 	case int64:
 		return fmt.Sprintf("%d", s), nil
 	case float64:
-		return fmt.Sprintf("%f", s), nil
+		// Suppress the trailing zeros.
+		return fmt.Sprintf("%v", s), nil
 	default:
 		return "", errors.New("failed to cast interface to string")
 	}
