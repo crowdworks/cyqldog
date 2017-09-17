@@ -21,9 +21,15 @@ type DogstatsdConfig struct {
 	Tags []string `yaml:"tags"`
 }
 
+// statsdClient is an interface of statsd.Client.
+// We make a layer of abstraction for testing.
+type statsdClient interface {
+	Gauge(name string, value float64, tags []string, rate float64) error
+}
+
 // Dogstatsd is a configuration of the dogstatsd to connect.
 type Dogstatsd struct {
-	client *statsd.Client
+	client statsdClient
 }
 
 // newDogstatsd returns an instance of Notifier interface.
