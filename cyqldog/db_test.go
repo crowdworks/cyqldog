@@ -40,8 +40,8 @@ func TestDBGet(t *testing.T) {
 				Interval:  (10 * time.Second),
 				Query:     "SELECT tag1, val1, tag2, val2 FROM table1",
 				Notifier:  "dogstatsd",
-				ValueCols: []string{"tag1", "tag2"},
-				TagCols:   []string{"val1", "val2"},
+				ValueCols: []string{"val1", "val2"},
+				TagCols:   []string{"tag1", "tag2"},
 			},
 			mockCols: []string{"tag1", "val1", "tag2", "val2"},
 			mockRows: [][]driver.Value{
