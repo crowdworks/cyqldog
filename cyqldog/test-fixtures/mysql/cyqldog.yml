@@ -6,6 +6,8 @@ data_source:
     user: cyqldog
     password: {{ .DB_PASSWORD }}
     dbname: cyqldogdb
+    charset: "utf8"
+    collation: "utf8_general_ci"
 
 notifiers:
   dogstatsd:

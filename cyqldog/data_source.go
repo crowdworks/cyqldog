@@ -1,9 +1,9 @@
 package cyqldog
 
 import (
-	"fmt"
 	"strings"
 
+	"github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
 )
 
@@ -63,11 +63,29 @@ func (s *DataSourceConfig) getDataSourceNamePostgres() (string, error) {
 func (s *DataSourceConfig) getDataSourceNameMySQL() (string, error) {
 	o := s.Options
 
-	// render DSN format
-	name := fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s",
-		o["user"], o["password"], o["host"], o["port"], o["dbname"],
-	)
+	port := "3306"
+	if len(o["port"]) > 0 {
+		port = o["port"]
+	}
 
-	return name, nil
+	c := &mysql.Config{
+		User:   o["user"],
+		Passwd: o["password"],
+		Net:    "tcp",
+		Addr:   o["host"] + ":" + port,
+		DBName: o["dbname"],
+	}
+
+	// delete basic options.
+	delete(o, "user")
+	delete(o, "password")
+	delete(o, "host")
+	delete(o, "port")
+	delete(o, "dbname")
+
+	// set other connection params.
+	c.Params = o
+
+	// render DSN format
+	return c.FormatDSN(), nil
 }
