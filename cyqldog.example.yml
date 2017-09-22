@@ -37,8 +37,10 @@ data_source:
     sslmode: disable
 
   # An example for MySQL
-  # Currently supported options are as follows.
-  # All options of go-sql-driver/mysql should be supported, but it is not implemented yet.
+  #
+  # Note that options other than host, port, user, password, dbname are passed as connection parameters.
+  # For all supported connection parameters, see README in go-sql-driver/mysql.
+  # https://github.com/go-sql-driver/mysql#parameters
   #
   # driver: mysql
   # options:
@@ -47,6 +49,8 @@ data_source:
   #   user: cyqldog
   #   password: {{ .DB_PASSWORD }}
   #   dbname: cyqldogdb
+  #   charset: "utf8"
+  #   collation: "utf8_general_ci"
 
 # Notifiers are configurations of output plugins.
 notifiers:

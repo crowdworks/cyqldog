@@ -1,6 +1,8 @@
 package cyqldog
 
 import (
+	"reflect"
+	"sort"
 	"strings"
 	"testing"
 )
@@ -70,17 +72,41 @@ func TestGetDataSourceNamePostgres(t *testing.T) {
 func TestGetDataSourceNameMySQL(t *testing.T) {
 	cases := []struct {
 		options DataSourceOptions
-		out     string
+		base    string
+		params  string
 	}{
 		{
 			options: DataSourceOptions{
-				"host":     "db.example.com",
+				"host":     "base.db.example.com",
 				"port":     "3306",
 				"user":     "cyqldog",
 				"password": "secret",
 				"dbname":   "cyqldogdb",
 			},
-			out: "cyqldog:secret@tcp(db.example.com:3306)/cyqldogdb",
+			base:   "cyqldog:secret@tcp(base.db.example.com:3306)/cyqldogdb",
+			params: "",
+		},
+		{
+			options: DataSourceOptions{
+				"host":     "short.db.example.com",
+				"user":     "cyqldog",
+				"password": "secret",
+			},
+			base:   "cyqldog:secret@tcp(short.db.example.com:3306)/",
+			params: "",
+		},
+		{
+			options: DataSourceOptions{
+				"host":      "params.db.example.com",
+				"port":      "3306",
+				"user":      "cyqldog",
+				"password":  "secret",
+				"dbname":    "cyqldogdb",
+				"charset":   "utf8",
+				"collation": "utf8_general_ci",
+			},
+			base:   "cyqldog:secret@tcp(params.db.example.com:3306)/cyqldogdb",
+			params: "charset=utf8&collation=utf8_general_ci",
 		},
 	}
 
@@ -91,11 +117,40 @@ func TestGetDataSourceNameMySQL(t *testing.T) {
 		}
 
 		got, _ := s.getDataSourceNameMySQL()
+		splittedDNS := strings.SplitN(got, "?", 2)
+		base := splittedDNS[0]
 
-		if got != tc.out {
-			t.Errorf("getDataSourceNameMySQL() with options = %v returns %s, but want = %s", tc.options, got, tc.out)
+		if base != tc.base {
+			t.Errorf("base of getDataSourceNameMySQL() with options = %v returns %s, but want = %s", tc.options, base, tc.base)
+		}
+
+		// want no params.
+		if len(tc.params) == 0 {
+			continue
+		}
+
+		// got no params.
+		if len(splittedDNS) < 2 {
+			t.Errorf("getDataSourceNameMySQL() with options = %v returns no params, but want = %s", tc.options, tc.params)
+			continue
+		}
+
+		// compare params.
+		params := splittedDNS[1]
+		if !splittedStringEqual(params, tc.params, "&") {
+			t.Errorf("params of getDataSourceNameMySQL() with options = %v returns %s, but want = %s", tc.options, params, tc.params)
 		}
 
 	}
 
+}
+
+// splittedStringEqual compare whether or not strings splitted by separater are
+// the same regardless of the order.
+func splittedStringEqual(s1 string, s2 string, sep string) bool {
+	ss1 := strings.Split(s1, sep)
+	ss2 := strings.Split(s2, sep)
+	sort.Strings(ss1)
+	sort.Strings(ss2)
+	return reflect.DeepEqual(ss1, ss2)
 }
