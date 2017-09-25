@@ -45,25 +45,35 @@ func TestGetDataSourceName(t *testing.T) {
 }
 
 func TestGetDataSourceNamePostgres(t *testing.T) {
-	s := DataSourceConfig{
-		Driver: "postgres",
-		Options: DataSourceOptions{
-			"host":     "db.example.com",
-			"port":     "5432",
-			"user":     "cyqldog",
-			"password": "secret",
-			"dbname":   "cyqldogdb",
-			"sslmode":  "disable",
+	cases := []struct {
+		options DataSourceOptions
+		out     string
+	}{
+		{
+			options: DataSourceOptions{
+				"host":     "db.example.com",
+				"port":     "5432",
+				"user":     "cyqldog",
+				"password": "secret",
+				"dbname":   "cyqldogdb",
+				"sslmode":  "disable",
+			},
+			out: "host=db.example.com port=5432 user=cyqldog password=secret dbname=cyqldogdb sslmode=disable",
 		},
 	}
 
-	out, _ := s.getDataSourceNamePostgres()
+	for _, tc := range cases {
+		s := DataSourceConfig{
+			Driver:  "postgres",
+			Options: tc.options,
+		}
 
-	// A map interation order is random, so the output is unstable.
-	// We only check if the key=value is included in the output.
-	for k, v := range s.Options {
-		if ok := strings.Contains(out, k+"="+v); !ok {
-			t.Errorf("getDataSourceNamePostgres() does not contains %s=%s", k, v)
+		got, _ := s.getDataSourceNamePostgres()
+
+		// A map interation order is random, so the output is unstable.
+		// We only check if the params are the same regardless of the order.
+		if !splittedStringEqual(got, tc.out, " ") {
+			t.Errorf("getDataSourceNamePostgres() with options = %v returns %s, but want = %s", tc.options, got, tc.out)
 		}
 	}
 

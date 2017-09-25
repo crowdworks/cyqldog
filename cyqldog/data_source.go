@@ -51,7 +51,7 @@ func (s *DataSourceConfig) getDataSourceName() (string, error) {
 }
 
 func (s *DataSourceConfig) getDataSourceNamePostgres() (string, error) {
-	opts := make([]string, len(s.Options))
+	opts := []string{}
 	for k, v := range s.Options {
 		o := k + "=" + v
 		opts = append(opts, o)
