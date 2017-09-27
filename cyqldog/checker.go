@@ -1,6 +1,8 @@
 package cyqldog
 
-import "log"
+import (
+	"log"
+)
 
 // Checker is a worker that executes SQLs and sends metrics.
 type Checker struct {
@@ -35,13 +37,19 @@ func (c *Checker) run(q chan Rule) {
 	for {
 		select {
 		case rule := <-q:
-			// dequeue the task and check.
 			log.Printf("checker: check: %s", rule.Name)
-			err := c.check(rule)
-			if err != nil {
-				// Currently, there is no way to notify errors.
-				// So we simply exit the program for the time being.
-				log.Fatal(err)
+
+			// dequeue the task and check.
+			if err := c.check(rule); err != nil {
+				log.Printf("checker: failed to check: %+v", err)
+
+				// send an error event to the notifier.
+				event := newErrorEvent(err)
+				if err := c.notifiers[rule.Notifier].Event(event); err != nil {
+					// Sending error event was failed.
+					// There is no way to notify errors, so we simply exit the program.
+					log.Fatalf("failed to send error event: %+v", err)
+				}
 			}
 		}
 	}
