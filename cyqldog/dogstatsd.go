@@ -59,7 +59,7 @@ func (d *Dogstatsd) Event(e *Event) error {
 	// However the constants are exported,
 	// so we convert string to statsd.eventAlertType by ourselves.
 	switch e.Level {
-	case "info":
+	case "", "info": // default is info
 		se.AlertType = statsd.Info
 	case "error":
 		se.AlertType = statsd.Error
