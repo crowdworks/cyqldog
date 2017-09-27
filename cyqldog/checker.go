@@ -31,7 +31,7 @@ func newChecker(ds DataSource, notifiers Notifiers) *Checker {
 }
 
 // run processes the monitoring task queue enqueued by the Scheduler.
-func (c *Checker) run(q chan Rule) {
+func (c *Checker) run(q <-chan Rule) {
 	log.Printf("checker: start")
 
 	for {

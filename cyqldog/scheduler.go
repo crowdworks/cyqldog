@@ -20,7 +20,7 @@ func newScheduler(id int, rule Rule) *Scheduler {
 }
 
 // run periodically generates monitoring tasks according to the rule.
-func (s *Scheduler) run(q chan Rule) {
+func (s *Scheduler) run(q chan<- Rule) {
 	log.Printf("scheduler(%d): start", s.id)
 
 	// Generate trigger periodically.
