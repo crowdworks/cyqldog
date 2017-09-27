@@ -4,15 +4,18 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/DataDog/datadog-go/statsd"
 )
 
 // mockStatsdClient is a mock of statsd.Client.
 type mockStatsdClient struct {
-	logs []mockStatsdLog
+	metrics []mockStatsdMetric
+	events  []statsd.Event
 }
 
-// mockStatsdLog records the method name and arguments of the mockStatsdClient's API call for testing.
-type mockStatsdLog struct {
+// mockStatsdMetric records the method name and arguments of the mockStatsdClient's API call for testing.
+type mockStatsdMetric struct {
 	method string
 	name   string
 	value  interface{}
@@ -23,14 +26,21 @@ type mockStatsdLog struct {
 // Gauge implements an interface of statsdClient for testing.
 // It only records API calls and does not call real dogstatsd.
 func (c *mockStatsdClient) Gauge(name string, value float64, tags []string, rate float64) error {
-	log := mockStatsdLog{
+	metric := mockStatsdMetric{
 		method: "gauge",
 		name:   name,
 		value:  value,
 		tags:   tags,
 		rate:   rate,
 	}
-	c.logs = append(c.logs, log)
+	c.metrics = append(c.metrics, metric)
+	return nil
+}
+
+// Event implements an interface of statsdClient for testing.
+// It only records API calls and does not call real dogstatsd.
+func (c *mockStatsdClient) Event(e *statsd.Event) error {
+	c.events = append(c.events, *e)
 	return nil
 }
 
@@ -46,7 +56,7 @@ func TestDogstatsdPut(t *testing.T) {
 	cases := []struct {
 		qr   QueryResult
 		rule Rule
-		out  []mockStatsdLog
+		out  []mockStatsdMetric
 	}{
 		{
 			qr: QueryResult{
@@ -62,7 +72,7 @@ func TestDogstatsdPut(t *testing.T) {
 				ValueCols: []string{"count"},
 				TagCols:   []string{},
 			},
-			out: []mockStatsdLog{
+			out: []mockStatsdMetric{
 				{method: "gauge", name: "test1.count", value: float64(3), tags: []string{}, rate: 1},
 			},
 		},
@@ -82,7 +92,7 @@ func TestDogstatsdPut(t *testing.T) {
 				ValueCols: []string{"val1", "val2"},
 				TagCols:   []string{"tag1", "tag2"},
 			},
-			out: []mockStatsdLog{
+			out: []mockStatsdMetric{
 				{method: "gauge", name: "test2.val1", value: float64(1), tags: []string{"tag1:hoge1", "tag2:fuga1"}, rate: 1},
 				{method: "gauge", name: "test2.val2", value: float64(0.1), tags: []string{"tag1:hoge1", "tag2:fuga1"}, rate: 1},
 				{method: "gauge", name: "test2.val1", value: float64(2), tags: []string{"tag1:hoge1", "tag2:fuga2"}, rate: 1},
@@ -101,10 +111,82 @@ func TestDogstatsdPut(t *testing.T) {
 				t.Errorf("Dogstatsd.Put(%+v, %+v) retruns unexpected err = %+v", tc.qr, tc.rule, err)
 			}
 
-			if !reflect.DeepEqual(c.logs, tc.out) {
-				t.Errorf("Dogstatsd.Put(%+v, %+v)\n got = %+v,\nwant = %+v", tc.qr, tc.rule, c.logs, tc.out)
+			if !reflect.DeepEqual(c.metrics, tc.out) {
+				t.Errorf("Dogstatsd.Put(%+v, %+v)\n got = %+v,\nwant = %+v", tc.qr, tc.rule, c.metrics, tc.out)
 			}
 		})
 	}
 
+}
+
+func TestDogstatsdEvent(t *testing.T) {
+	cases := []struct {
+		in  *Event
+		out []statsd.Event
+	}{
+		{
+			in: &Event{Title: "default", Text: "fuga"},
+			out: []statsd.Event{
+				statsd.Event{Title: "default", Text: "fuga", AggregationKey: "cyqldog", AlertType: statsd.Info, Tags: nil},
+			},
+		},
+		{
+			in: &Event{Title: "info", Text: "fuga", Level: "info", Tags: []string{"piyo"}},
+			out: []statsd.Event{
+				statsd.Event{Title: "info", Text: "fuga", AggregationKey: "cyqldog", AlertType: statsd.Info, Tags: []string{"piyo"}},
+			},
+		},
+		{
+			in: &Event{Title: "error", Text: "fuga", Level: "error", Tags: []string{"piyo"}},
+			out: []statsd.Event{
+				statsd.Event{Title: "error", Text: "fuga", AggregationKey: "cyqldog", AlertType: statsd.Error, Tags: []string{"piyo"}},
+			},
+		},
+		{
+			in: &Event{Title: "warning", Text: "fuga", Level: "warning", Tags: []string{"piyo"}},
+			out: []statsd.Event{
+				statsd.Event{Title: "warning", Text: "fuga", AggregationKey: "cyqldog", AlertType: statsd.Warning, Tags: []string{"piyo"}},
+			},
+		},
+		{
+			in: &Event{Title: "success", Text: "fuga", Level: "success", Tags: []string{"piyo"}},
+			out: []statsd.Event{
+				statsd.Event{Title: "success", Text: "fuga", AggregationKey: "cyqldog", AlertType: statsd.Success, Tags: []string{"piyo"}},
+			},
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.in.Title, func(t *testing.T) {
+			c := newMockStatsdClient()
+			d := newMockDogstatsd(c)
+			if err := d.Event(tc.in); err != nil {
+				t.Errorf("Dogstatsd.Event(%+v) retruns unexpected err = %+v", tc.in, err)
+			}
+
+			if !reflect.DeepEqual(c.events, tc.out) {
+				t.Errorf("Dogstatsd.Event(%+v)\n got = %+v,\nwant = %+v", tc.in, c.events, tc.out)
+			}
+		})
+	}
+}
+
+func TestDogstatsdEventUnknownLevel(t *testing.T) {
+	cases := []struct {
+		in *Event
+	}{
+		{
+			in: &Event{Title: "unknown", Text: "fuga", Level: "unknown", Tags: []string{"piyo"}},
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.in.Title, func(t *testing.T) {
+			c := newMockStatsdClient()
+			d := newMockDogstatsd(c)
+			if err := d.Event(tc.in); err == nil {
+				t.Errorf("Dogstatsd.Event(%+v) retruns expected unknown level error, but err == nil", tc.in)
+			}
+		})
+	}
 }
