@@ -25,6 +25,7 @@ type DogstatsdConfig struct {
 // We make a layer of abstraction for testing.
 type statsdClient interface {
 	Gauge(name string, value float64, tags []string, rate float64) error
+	Event(e *statsd.Event) error
 }
 
 // Dogstatsd is a configuration of the dogstatsd to connect.
@@ -43,6 +44,34 @@ func newDogstatsd(d DogstatsdConfig) (Notifier, error) {
 	c.Namespace = d.Namespace + "."
 	c.Tags = append(c.Tags, d.Tags...)
 	return &Dogstatsd{client: c}, nil
+}
+
+// Event send an event to the dogstatsd.
+func (d *Dogstatsd) Event(e *Event) error {
+	se := &statsd.Event{
+		Title:          e.Title,
+		Text:           e.Text,
+		AggregationKey: "cyqldog",
+		Tags:           e.Tags,
+	}
+
+	// Unfortunately statsd.eventAlertType is an unexported type.
+	// However the constants are exported,
+	// so we convert string to statsd.eventAlertType by ourselves.
+	switch e.Level {
+	case "", "info": // default is info
+		se.AlertType = statsd.Info
+	case "error":
+		se.AlertType = statsd.Error
+	case "warning":
+		se.AlertType = statsd.Warning
+	case "success":
+		se.AlertType = statsd.Success
+	default:
+		return errors.Errorf("unknown event level: %+v", e)
+	}
+
+	return d.client.Event(se)
 }
 
 // Put sends metrics to the dogstatsd.

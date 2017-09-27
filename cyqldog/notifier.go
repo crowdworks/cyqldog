@@ -1,8 +1,24 @@
 package cyqldog
 
+import "fmt"
+
 // Notifier is an interface which send metrics to.
 type Notifier interface {
 	Put(qr QueryResult, rule Rule) error
+	Event(e *Event) error
+}
+
+// An Event is an object that can be posted to the Notifier.
+type Event struct {
+	// Title of the event. Required.
+	Title string
+	// Text is the description of the event. Required.
+	Text string
+	// Level is a level of the event.
+	// This can be info, error, warning or success. (default: info)
+	Level string
+	// Tags for the event.
+	Tags []string
 }
 
 // Notifiers is a map of notifiers.
@@ -26,4 +42,13 @@ func newNotifiers(c NotifiersConfig) (Notifiers, error) {
 	notifiers["dogstatsd"] = dogstatsd
 
 	return notifiers, nil
+}
+
+func newErrorEvent(err error) *Event {
+	return &Event{
+		Title: fmt.Sprintf("cyqldog: %s", err),
+		Text:  fmt.Sprintf("%+v", err),
+		Level: "error",
+		Tags:  []string{"cyqldog"},
+	}
 }
