@@ -9,3 +9,4 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/cyqldog
 FROM alpine:3.6
 WORKDIR /app
 COPY --from=builder /go/src/github.com/crowdworks/cyqldog/bin/cyqldog ./bin/cyqldog
+ENTRYPOINT ["/app/bin/cyqldog"]
