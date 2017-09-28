@@ -1,6 +1,6 @@
 FROM alpine:3.6
 
-ENV CYQLDOG_VERSION=0.1.2
+ENV CYQLDOG_VERSION=0.1.3
 WORKDIR /app
 RUN mkdir -p /app/bin
 
