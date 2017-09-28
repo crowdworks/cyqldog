@@ -1,12 +1,12 @@
-FROM golang:1.8 AS builder
-
-WORKDIR /go/src/github.com/crowdworks/cyqldog
-RUN go get -u github.com/golang/dep/cmd/dep
-COPY . .
-RUN dep ensure
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/cyqldog
-
 FROM alpine:3.6
+
+ENV CYQLDOG_VERSION=0.1.1
 WORKDIR /app
-COPY --from=builder /go/src/github.com/crowdworks/cyqldog/bin/cyqldog ./bin/cyqldog
+RUN mkdir -p /app/bin
+
+RUN apk --no-cache add curl ca-certificates && update-ca-certificates
+RUN curl -fsSL https://github.com/crowdworks/cyqldog/releases/download/v${CYQLDOG_VERSION}/cyqldog_${CYQLDOG_VERSION}_linux_amd64.tar.gz \
+    | tar -xzC /app/bin && chmod +x /app/bin/cyqldog
+RUN apk del --purge curl
+
 ENTRYPOINT ["/app/bin/cyqldog"]
