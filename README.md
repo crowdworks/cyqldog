@@ -27,11 +27,11 @@ but if you have not installed dd-agent,
 When using Docker, please make sure the UDP 8125 port is open by adding the option `-p 8125:8125/udp` to the `docker run` command.
 
 # Install
-## cyqldog
-
 Download the latest compiled binaries and put it anywhere in your executable path.
 
 https://github.com/crowdworks/cyqldog/releases
+
+or you can run with Docker. (described later)
 
 # Usage
 Create your configuration file, and pass it to `-C` flag to run cysqldog.
@@ -146,6 +146,31 @@ rules:
     value_cols:
       - val1
       - val2
+```
+
+# Run with Docker
+You can run cyqldog with Docker.
+
+Start test database and dogstatsd with docker-compose for demo.
+
+```
+$ docker-compose up -d
+```
+
+The Docker images are available in the Docker Hub.
+
+https://hub.docker.com/r/crowdworks/cyqldog/tags/
+
+
+Mount a sample configuration file, set environment variables, and run cyqldog.
+
+```
+$ docker run -it --rm \
+    -v $(pwd)/cyqldog/test-fixtures/postgres:/app/config \
+    -e DB_HOST=127.0.0.1 \
+    -e DB_PASSWORD=password \
+    -e DD_HOST=127.0.0.1 \
+    cyqldog:latest -C config/cyqldog.yml
 ```
 
 # Contributions
