@@ -170,7 +170,7 @@ $ docker run -it --rm \
     -e DB_HOST=127.0.0.1 \
     -e DB_PASSWORD=password \
     -e DD_HOST=127.0.0.1 \
-    cyqldog:latest -C config/cyqldog.yml
+    crowdworks/cyqldog:latest -C config/cyqldog.yml
 ```
 
 # Contributions
