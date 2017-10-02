@@ -138,8 +138,8 @@ rules:
     notifier: dogstatsd
     # TagCols is a list of names of the columns used as metric tags.
     # In this example, the following metrics are sent.
-    # * playground.cyqldog.test2.value1 (with tags ["env:local", "source:db.example.com", (value of column tag1), (value of column tag2)])
-    # * playground.cyqldog.test2.value2 (with tags ["env:local", "source:db.example.com", (value of column tag1), (value of column tag2)])
+    # * playground.cyqldog.test2.value1 (with tags ["env:local", "source:db.example.com", "tag1:(value of column tag1)", "tag2:(value of column tag2)"])
+    # * playground.cyqldog.test2.value2 (with tags ["env:local", "source:db.example.com", "tag1:(value of column tag1)", "tag2:(value of column tag2)"])
     tag_cols:
       - tag1
       - tag2
