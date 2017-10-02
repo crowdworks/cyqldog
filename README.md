@@ -8,7 +8,7 @@ A monitoring tool for periodically executing SQLs and sending metrics to Datadog
 # Features
 
 * Execute multiple SQLs at different intervals and send metrics.
-* Supported data sources are Postgres (including Redshift) and MySQL.
+* Supported data sources are PostgreSQL (including Redshift) and MySQL.
 * Supported notifier to send metrics is Datadog (using DogStatsD).
 
 # Requirements
