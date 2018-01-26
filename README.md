@@ -155,6 +155,12 @@ Start test database and dogstatsd with docker-compose for demo.
 
 ```
 $ docker-compose up -d
+
+$ docker run -it --rm \
+    -v $(pwd)/cyqldog/test-fixtures/postgres:/app/config \
+    -e PGPASSWORD=password \
+    postgres:alpine \
+    psql -h docker.for.mac.localhost -U cyqldog -d cyqldogdb -f /app/config/setup_dev.sql
 ```
 
 The Docker images are available in the Docker Hub.
@@ -167,9 +173,9 @@ Mount a sample configuration file, set environment variables, and run cyqldog.
 ```
 $ docker run -it --rm \
     -v $(pwd)/cyqldog/test-fixtures/postgres:/app/config \
-    -e DB_HOST=127.0.0.1 \
+    -e DB_HOST=docker.for.mac.localhost \
     -e DB_PASSWORD=password \
-    -e DD_HOST=127.0.0.1 \
+    -e DD_HOST=docker.for.mac.localhost \
     quay.io/crowdworks/cyqldog:latest -C config/cyqldog.yml
 ```
 
