@@ -159,7 +159,7 @@ $ docker-compose up -d
 
 The Docker images are available in the Docker Hub.
 
-https://hub.docker.com/r/crowdworks/cyqldog/tags/
+https://quay.io/repository/crowdworks/cyqldog?tab=tags
 
 
 Mount a sample configuration file, set environment variables, and run cyqldog.
@@ -170,7 +170,7 @@ $ docker run -it --rm \
     -e DB_HOST=127.0.0.1 \
     -e DB_PASSWORD=password \
     -e DD_HOST=127.0.0.1 \
-    crowdworks/cyqldog:latest -C config/cyqldog.yml
+    quay.io/crowdworks/cyqldog:latest -C config/cyqldog.yml
 ```
 
 # Contributions
