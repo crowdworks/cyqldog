@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.15.0
 
 ENV CYQLDOG_VERSION=0.1.3
 WORKDIR /app
