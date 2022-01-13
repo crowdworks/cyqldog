@@ -1,7 +1,7 @@
 package cyqldog
 
 import (
-	"fmt"
+	"golang.org/x/xerrors"
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
@@ -46,7 +46,7 @@ func (s *DataSourceConfig) getDataSourceName() (string, error) {
 	case "mysql":
 		return s.getDataSourceNameMySQL()
 	default:
-		return "", fmt.Errorf("unsupported database driver: %s", s.Driver)
+		return "", xerrors.Errorf("unsupported database driver: %s", s.Driver)
 	}
 }
 
