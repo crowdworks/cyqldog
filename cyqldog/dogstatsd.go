@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/DataDog/datadog-go/statsd"
-	"github.com/pkg/errors"
 )
 
 // DogstatsdConfig is a configuration of the dogstatsd to connect.
@@ -38,7 +37,7 @@ func newDogstatsd(d DogstatsdConfig) (Notifier, error) {
 	address := fmt.Sprintf("%s:%s", d.Host, d.Port)
 	c, err := statsd.New(address)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to open statsd: host=%s port=%s", d.Host, d.Port)
+		return nil, fmt.Errorf("failed to open statsd: host=%s port=%s", d.Host, d.Port)
 	}
 
 	c.Namespace = d.Namespace + "."
@@ -68,7 +67,7 @@ func (d *Dogstatsd) Event(e *Event) error {
 	case "success":
 		se.AlertType = statsd.Success
 	default:
-		return errors.Errorf("unknown event level: %+v", e)
+		return fmt.Errorf("unknown event level: %+v", e)
 	}
 
 	return d.client.Event(se)
@@ -89,7 +88,7 @@ func (d *Dogstatsd) Put(qr QueryResult, rule Rule) error {
 		// Send a metic to the dogstatsd.
 		err := d.client.Gauge(metric.name, metric.value, metric.tags, 1)
 		if err != nil {
-			return errors.Wrapf(err, "failed to gauge statsd for name = %s, value = %v, tags = %v", metric.name, metric.value, metric.tags)
+			return fmt.Errorf("failed to gauge statsd for name = %s, value = %v, tags = %v", metric.name, metric.value, metric.tags)
 		}
 	}
 	return nil
@@ -121,7 +120,7 @@ func buildMetricsForRecord(record Record, prefix string, valueCols []string, tag
 		// so we parse and convert it to float64 here.
 		value, err := strconv.ParseFloat(record[vc], 64)
 		if err != nil {
-			return metrics, errors.Wrapf(err, "failed to ParseFloat: col = %s, type = %T(%v)", vc, record[vc], record[vc])
+			return metrics, fmt.Errorf("failed to ParseFloat: col = %s, type = %T(%v)", vc, record[vc], record[vc])
 		}
 
 		// build metric.

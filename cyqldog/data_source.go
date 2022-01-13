@@ -1,10 +1,10 @@
 package cyqldog
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/pkg/errors"
 )
 
 // DataSource is an interface which get metrics from.
@@ -46,7 +46,7 @@ func (s *DataSourceConfig) getDataSourceName() (string, error) {
 	case "mysql":
 		return s.getDataSourceNameMySQL()
 	default:
-		return "", errors.Errorf("unsupported database driver: %s", s.Driver)
+		return "", fmt.Errorf("unsupported database driver: %s", s.Driver)
 	}
 }
 

@@ -2,10 +2,9 @@ package cyqldog
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
-
-	"github.com/pkg/errors"
 )
 
 // DB is an implementation of DataSource.
@@ -27,14 +26,14 @@ func newDB(c DataSourceConfig) (DataSource, error) {
 	// Note that network connection is not established at this time.
 	db, err := sql.Open(c.Driver, dataSourceName)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to open database")
+		return nil, fmt.Errorf("failed to open database, %w", err)
 	}
 
 	// Connect to the database and verify its connection.
 	if err = db.Ping(); err != nil {
 		db.Close()
 
-		return nil, errors.Wrapf(err, "failed to connect database")
+		return nil, fmt.Errorf("failed to connect database, %w", err)
 	}
 
 	return &DB{db: db}, nil
@@ -48,14 +47,14 @@ func (d *DB) Get(rule Rule) (QueryResult, error) {
 	log.Printf("db: query: %s", rule.Query)
 	rows, err := d.db.Query(rule.Query)
 	if err != nil {
-		return qr, errors.Wrapf(err, "failed to query: %s", rule.Query)
+		return qr, fmt.Errorf("failed to query: %s", rule.Query)
 	}
 	defer rows.Close()
 
 	// Get columns to map metric values and tags.
 	cols, err := rows.Columns()
 	if err != nil {
-		return qr, errors.Wrapf(err, "failed to get column names: %s", rule.Query)
+		return qr, fmt.Errorf("failed to get column names: %s", rule.Query)
 	}
 
 	// For each rows.
@@ -70,7 +69,7 @@ func (d *DB) Get(rule Rule) (QueryResult, error) {
 		}
 		err := rows.Scan(rowPtr...)
 		if err != nil {
-			return qr, errors.Wrapf(err, "failed to scan value: %s", rule.Query)
+			return qr, fmt.Errorf("failed to scan value: %s", rule.Query)
 		}
 
 		// Convert the row to record.
@@ -94,7 +93,7 @@ func buildRecord(row []interface{}, cols []string) (Record, error) {
 	for i, c := range row {
 		s, err := convertToString(c)
 		if err != nil {
-			return record, errors.Wrapf(err, "failt to convertToString: col = %s, type = %T(%v)", cols[i], c, c)
+			return record, fmt.Errorf("faied to convertToString: col = %s, type = %T(%v)", cols[i], c, c)
 		}
 
 		record[cols[i]] = s

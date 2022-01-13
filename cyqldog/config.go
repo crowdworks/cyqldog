@@ -2,12 +2,12 @@ package cyqldog
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"os"
 	"strings"
 
-	"github.com/pkg/errors"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -26,7 +26,7 @@ func newConfig(filename string) (*Config, error) {
 	// Read bytes from file.
 	buf, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to read file: %s", filename)
+		return nil, fmt.Errorf("failed to read file: %s", filename)
 	}
 
 	// Render envionment variables in the configuration file.
@@ -39,7 +39,7 @@ func newConfig(filename string) (*Config, error) {
 	c := Config{}
 	err = yaml.Unmarshal(rendered, &c)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to parse yaml: %s", filename)
+		return nil, fmt.Errorf("failed to parse yaml: %s", filename)
 	}
 
 	return &c, nil
@@ -62,14 +62,14 @@ func newEnvMap() *envMap {
 func renderEnv(buf []byte) ([]byte, error) {
 	tmpl, err := template.New("env").Parse(string(buf))
 	if err != nil {
-		return []byte{}, errors.Wrapf(err, "failed to parse template: %v", buf)
+		return []byte{}, fmt.Errorf("failed to parse template: %v", buf)
 	}
 
 	var rendered bytes.Buffer
 	envs := newEnvMap()
 	err = tmpl.Execute(&rendered, *envs)
 	if err != nil {
-		return []byte{}, errors.Wrapf(err, "failed to execute template: %v", buf)
+		return []byte{}, fmt.Errorf("failed to execute template: %v", buf)
 	}
 	return rendered.Bytes(), nil
 }
