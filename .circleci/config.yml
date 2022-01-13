@@ -2,10 +2,8 @@ version: 2
 jobs:
   build:
     docker:
-      - image: quay.io/crowdworks/dep:latest
-        environment:
-          GOPATH: /go
-    working_directory: /go/src/github.com/crowdworks/cyqldog
+      - image: cimg/go:1.17.6
+
     steps:
       - checkout
       - run:
@@ -14,10 +12,10 @@ jobs:
       - restore_cache:
           name: Restoring cache - vendor
           keys:
-            - vendor-{{ checksum "Gopkg.toml" }}-{{ checksum "Gopkg.lock" }}
+            - go-mod-v4-{{ checksum "go.sum" }}
       - run:
           name: Install packages
-          command: dep ensure
+          command: go mod download
       - run:
           name: Build
           command: go build -o bin/cyqldog
@@ -27,6 +25,6 @@ jobs:
 
       - save_cache:
           name: Saving cache - vendor
-          key: vendor-{{ checksum "Gopkg.toml" }}-{{ checksum "Gopkg.lock" }}
+          key: go-mod-v4-{{ checksum "go.sum" }}
           paths:
-            - "vendor"
+            - "/go/pkg/mod"
