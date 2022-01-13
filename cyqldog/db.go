@@ -93,7 +93,7 @@ func buildRecord(row []interface{}, cols []string) (Record, error) {
 	for i, c := range row {
 		s, err := convertToString(c)
 		if err != nil {
-			return record, xerrors.Errorf("faied to convertToString: col = %s, type = %T(%v): %w", cols[i], c, c, err)
+			return record, xerrors.Errorf("failed to convertToString: col = %s, type = %T(%v): %w", cols[i], c, c, err)
 		}
 
 		record[cols[i]] = s
