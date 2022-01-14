@@ -34,15 +34,13 @@ func (s *Scheduler) run(q chan<- Rule) {
 	q <- s.rule
 
 	for {
-		select {
-		case <-t.C:
-			log.Printf("scheduler(%d): triggered: %s", s.id, s.rule.Name)
-			// So as not to consume the database connection simultaneously
-			// among the schedulers with different intervals,
-			// we put a task in the queue and serialize the monitoring.
-			// Taking into account the case of the monitoring query is slow,
-			// block here without buffers to prevent duplicate monitoring tasks.
-			q <- s.rule
-		}
+		<-t.C
+		log.Printf("scheduler(%d): triggered: %s", s.id, s.rule.Name)
+		// So as not to consume the database connection simultaneously
+		// among the schedulers with different intervals,
+		// we put a task in the queue and serialize the monitoring.
+		// Taking into account the case of the monitoring query is slow,
+		// block here without buffers to prevent duplicate monitoring tasks.
+		q <- s.rule
 	}
 }

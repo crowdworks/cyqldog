@@ -63,11 +63,9 @@ func (m *Monitor) Run() error {
 	// The main goroutine keep on waiting here.
 loop:
 	for {
-		select {
-		case <-stop:
-			log.Println("monitor: stopping")
-			break loop
-		}
+		<-stop
+		log.Println("monitor: stopping")
+		break loop
 	}
 
 	return nil

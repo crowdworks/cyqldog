@@ -35,21 +35,19 @@ func (c *Checker) run(q <-chan Rule) {
 	log.Printf("checker: start")
 
 	for {
-		select {
-		case rule := <-q:
-			log.Printf("checker: check: %s", rule.Name)
+		rule := <-q
+		log.Printf("checker: check: %s", rule.Name)
 
-			// dequeue the task and check.
-			if err := c.check(rule); err != nil {
-				log.Printf("checker: failed to check: %+v", err)
+		// dequeue the task and check.
+		if err := c.check(rule); err != nil {
+			log.Printf("checker: failed to check: %+v", err)
 
-				// send an error event to the notifier.
-				event := newErrorEvent(err)
-				if err := c.notifiers[rule.Notifier].Event(event); err != nil {
-					// Sending error event was failed.
-					// There is no way to notify errors, so we simply exit the program.
-					log.Fatalf("failed to send error event: %+v", err)
-				}
+			// send an error event to the notifier.
+			event := newErrorEvent(err)
+			if err := c.notifiers[rule.Notifier].Event(event); err != nil {
+				// Sending error event was failed.
+				// There is no way to notify errors, so we simply exit the program.
+				log.Fatalf("failed to send error event: %+v", err)
 			}
 		}
 	}
