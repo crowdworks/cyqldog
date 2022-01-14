@@ -1,8 +1,9 @@
 package cyqldog
 
 import (
-	"golang.org/x/xerrors"
 	"strings"
+
+	"golang.org/x/xerrors"
 
 	"github.com/go-sql-driver/mysql"
 )
