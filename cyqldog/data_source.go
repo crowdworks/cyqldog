@@ -68,13 +68,13 @@ func (s *DataSourceConfig) getDataSourceNameMySQL() (string, error) {
 		port = o["port"]
 	}
 
-	c := &mysql.Config{
-		User:   o["user"],
-		Passwd: o["password"],
-		Net:    "tcp",
-		Addr:   o["host"] + ":" + port,
-		DBName: o["dbname"],
-	}
+	c := mysql.NewConfig()
+
+	c.User = o["user"]
+	c.Passwd = o["password"]
+	c.Net = "tcp"
+	c.Addr = o["host"] + ":" + port
+	c.DBName = o["dbname"]
 
 	// delete basic options.
 	delete(o, "user")
