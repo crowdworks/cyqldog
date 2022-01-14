@@ -1,10 +1,10 @@
-FROM golang:1.17-alpine AS builder
+FROM golang:1.17-bullseye AS builder
 
 WORKDIR /go/src/github.com/crowdworks/cyqldog
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/cyqldog
 
-FROM alpine:3.15.0
+FROM debian:bullseye-slim
 WORKDIR /app
 COPY --from=builder /go/src/github.com/crowdworks/cyqldog/bin/cyqldog ./bin/cyqldog
 ENTRYPOINT ["/app/bin/cyqldog"]
