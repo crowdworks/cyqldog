@@ -2,11 +2,12 @@ package cyqldog
 
 import (
 	"bytes"
-	"golang.org/x/xerrors"
 	"html/template"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"golang.org/x/xerrors"
 
 	yaml "gopkg.in/yaml.v2"
 )

@@ -3,8 +3,9 @@ package cyqldog
 import (
 	"database/sql"
 	"fmt"
-	"golang.org/x/xerrors"
 	"log"
+
+	"golang.org/x/xerrors"
 )
 
 // DB is an implementation of DataSource.

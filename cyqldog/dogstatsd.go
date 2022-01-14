@@ -2,9 +2,10 @@ package cyqldog
 
 import (
 	"fmt"
-	"golang.org/x/xerrors"
 	"log"
 	"strconv"
+
+	"golang.org/x/xerrors"
 
 	"github.com/DataDog/datadog-go/statsd"
 )
