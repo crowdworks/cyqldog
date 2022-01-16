@@ -1,12 +1,14 @@
+FROM golang:1.17.6-bullseye AS builder
+
+WORKDIR /go/src/github.com/crowdworks/cyqldog
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN make build
+
 FROM debian:bullseye-slim
-
-ENV CYQLDOG_VERSION=0.1.3
 WORKDIR /app
-RUN mkdir -p /app/bin
-
-RUN apt update && \
-    apt install -y curl ca-certificates && \
-    curl -fsSL https://github.com/crowdworks/cyqldog/releases/download/v${CYQLDOG_VERSION}/cyqldog_${CYQLDOG_VERSION}_linux_amd64.tar.gz | tar -xzC /app/bin && \
-    chmod +x /app/bin/cyqldog
-
+COPY --from=builder /go/src/github.com/crowdworks/cyqldog/bin/cyqldog ./bin/cyqldog
 ENTRYPOINT ["/app/bin/cyqldog"]
