@@ -163,10 +163,9 @@ $ docker run -it --rm \
     psql -h docker.for.mac.localhost -U cyqldog -d cyqldogdb -f /app/config/setup_dev.sql
 ```
 
-The Docker images are available in the Docker Hub.
+The Docker images are available in the GitHub Container Registry.
 
-https://quay.io/repository/crowdworks/cyqldog?tab=tags
-
+https://github.com/crowdworks/cyqldog/pkgs/container/cyqldog
 
 Mount a sample configuration file, set environment variables, and run cyqldog.
 
@@ -176,7 +175,7 @@ $ docker run -it --rm \
     -e DB_HOST=docker.for.mac.localhost \
     -e DB_PASSWORD=password \
     -e DD_HOST=docker.for.mac.localhost \
-    quay.io/crowdworks/cyqldog:latest -C config/cyqldog.yml
+    ghcr.io/crowdworks/cyqldog:latest -C config/cyqldog.yml
 ```
 
 # Contributions
