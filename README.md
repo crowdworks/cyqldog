@@ -160,7 +160,7 @@ $ docker run -it --rm \
     -v $(pwd)/cyqldog/test-fixtures/postgres:/app/config \
     -e PGPASSWORD=password \
     postgres:alpine \
-    psql -h docker.for.mac.localhost -U cyqldog -d cyqldogdb -f /app/config/setup_dev.sql
+    psql -h host.docker.internal -U cyqldog -d cyqldogdb -f /app/config/setup_dev.sql
 ```
 
 The Docker images are available in the GitHub Container Registry.
@@ -172,9 +172,9 @@ Mount a sample configuration file, set environment variables, and run cyqldog.
 ```
 $ docker run -it --rm \
     -v $(pwd)/cyqldog/test-fixtures/postgres:/app/config \
-    -e DB_HOST=docker.for.mac.localhost \
+    -e DB_HOST=host.docker.internal \
     -e DB_PASSWORD=password \
-    -e DD_HOST=docker.for.mac.localhost \
+    -e DD_HOST=host.docker.internal \
     ghcr.io/crowdworks/cyqldog:latest -C config/cyqldog.yml
 ```
 
