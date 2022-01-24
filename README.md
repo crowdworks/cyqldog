@@ -16,13 +16,13 @@ A monitoring tool for periodically executing SQLs and sending metrics to Datadog
 
 The cyqldog uses [DogStatsD](https://docs.datadoghq.com/guides/dogstatsd/) to send metrics to Datadog.
 
-DogStatsD is a metrics aggregation service bundled with the Datadog Agent (dd-agent).
-If you want to send metrics to Datadog, you may alreadly have installed dd-agent including DogStatsD,
-but if you have not installed dd-agent,
+DogStatsD is a metrics aggregation service bundled with the Datadog Agent (datadog-agent).
+If you want to send metrics to Datadog, you may already have installed datadog-agent including DogStatsD,
+but if you have not installed datadog-agent,
 
-* install dd-agent (https://docs.datadoghq.com/guides/basic_agent_usage/)
-* or you can run dd-agent with Docker. (https://github.com/DataDog/docker-dd-agent)
-* or you can run only DogStatsD with Docker. (https://github.com/DataDog/docker-dd-agent#dogstatsd)
+* install Datadog Agent (https://docs.datadoghq.com/agent/)
+* or you can run Datadog Agent with Docker. (https://hub.docker.com/r/datadog/agent)
+* or you can run only DogStatsD with Docker. (https://hub.docker.com/r/datadog/dogstatsd)
 
 When using Docker, please make sure the UDP 8125 port is open by adding the option `-p 8125:8125/udp` to the `docker run` command.
 
@@ -175,6 +175,7 @@ $ docker run -it --rm \
     -e DB_HOST=host.docker.internal \
     -e DB_PASSWORD=password \
     -e DD_HOST=host.docker.internal \
+    -e DD_API_KEY=[YOUR_DD_API_KEY] \
     ghcr.io/crowdworks/cyqldog:latest -C config/cyqldog.yml
 ```
 
