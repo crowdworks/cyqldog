@@ -159,7 +159,7 @@ $ docker-compose up -d
 $ docker run -it --rm \
     -v $(pwd)/cyqldog/test-fixtures/postgres:/app/config \
     -e PGPASSWORD=password \
-    postgres:9.6-alpine \
+    postgres:14.1-alpine \
     psql -h host.docker.internal -U cyqldog -d cyqldogdb -f /app/config/setup_dev.sql
 ```
 

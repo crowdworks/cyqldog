@@ -10,7 +10,7 @@ services:
       - /var/lib/mysql
 
   postgres:
-    image: postgres:9.6-alpine
+    image: postgres:14.1-alpine
     volumes_from:
       - storage-postgres
     ports:
