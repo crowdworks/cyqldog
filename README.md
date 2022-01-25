@@ -153,6 +153,8 @@ You can run cyqldog with Docker.
 
 Start test database and dogstatsd with docker-compose for demo.
 
+## Postgres
+
 ```
 $ docker-compose up -d
 
@@ -176,6 +178,33 @@ $ docker run -it --rm \
     -e DB_PASSWORD=password \
     -e DD_HOST=host.docker.internal \
     -e DD_API_KEY=[YOUR_DD_API_KEY] \
+    ghcr.io/crowdworks/cyqldog:latest -C config/cyqldog.yml
+```
+
+## MySQL
+
+```
+$ docker-compose up -d
+
+$ docker run -it --rm \
+    -v $(pwd)/cyqldog/test-fixtures/mysql:/app/config \
+    mysql:8.0 \
+    /bin/bash -c "mysql -h host.docker.internal -u cyqldog -ppassword cyqldogdb < /app/config/setup_dev.sql"
+```
+
+The Docker images are available in the GitHub Container Registry.
+
+https://github.com/crowdworks/cyqldog/pkgs/container/cyqldog
+
+Mount a sample configuration file, set environment variables, and run cyqldog.
+
+```
+$ docker run -it --rm \
+    -v $(pwd)/cyqldog/test-fixtures/mysql:/app/config \
+    -e DB_HOST \
+    -e DB_PASSWORD \
+    -e DD_HOST \
+    -e DD_API_KEY \
     ghcr.io/crowdworks/cyqldog:latest -C config/cyqldog.yml
 ```
 
