@@ -31,7 +31,7 @@ services:
       MYSQL_PASSWORD: "${DB_PASSWORD}"
       MYSQL_DATABASE: "cyqldogdb"
   dogstatsd:
-    image: datadog/docker-dd-agent:11.0.5141-dogstatsd-alpine
+    image: datadog/dogstatsd:7.32.4
     ports:
       - "8125:8125/udp"
     environment:
