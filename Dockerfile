@@ -1,4 +1,4 @@
-FROM golang:1.17.7-bullseye AS builder
+FROM golang:1.18rc1-bullseye AS builder
 
 WORKDIR /go/src/github.com/crowdworks/cyqldog
 
