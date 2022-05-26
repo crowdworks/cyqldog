@@ -16,3 +16,13 @@ updates:
       time: "08:30"
       timezone: "Asia/Tokyo"
     target-branch: "master"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:30"
+      timezone: "Asia/Tokyo"
+    target-branch: "master"
+
+
