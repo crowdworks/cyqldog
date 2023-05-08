@@ -151,12 +151,12 @@ rules:
 # Run with Docker
 You can run cyqldog with Docker.
 
-Start test database and dogstatsd with docker-compose for demo.
+Start test database and dogstatsd with docker compose for demo.
 
 ## Postgres
 
 ```
-$ docker-compose up -d
+$ docker compose up -d
 
 $ docker run -it --rm \
     -v $(pwd)/cyqldog/test-fixtures/postgres:/app/config \
@@ -184,7 +184,7 @@ $ docker run -it --rm \
 ## MySQL
 
 ```
-$ docker-compose up -d
+$ docker compose up -d
 
 $ docker run -it --rm \
     -v $(pwd)/cyqldog/test-fixtures/mysql:/app/config \
