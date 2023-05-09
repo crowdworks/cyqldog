@@ -30,7 +30,7 @@ services:
       MYSQL_PASSWORD: "${DB_PASSWORD}"
       MYSQL_DATABASE: "cyqldogdb"
   dogstatsd:
-    image: datadog/dogstatsd:7.32.4
+    image: datadog/dogstatsd:7.44.0
     ports:
       - "8125:8125/udp"
     environment:
