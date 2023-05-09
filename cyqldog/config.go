@@ -3,7 +3,6 @@ package cyqldog
 import (
 	"bytes"
 	"html/template"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -25,7 +24,7 @@ type Config struct {
 // newConfig returns an instance of the Config.
 func newConfig(filename string) (*Config, error) {
 	// Read bytes from file.
-	buf, err := ioutil.ReadFile(filename)
+	buf, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, xerrors.Errorf("failed to read file: %s: %w", filename, err)
 	}
