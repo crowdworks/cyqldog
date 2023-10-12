@@ -34,7 +34,7 @@ https://github.com/crowdworks/cyqldog/releases
 or you can run with Docker. (described later)
 
 # Usage
-Create your configuration file, and pass it to `-C` flag to run cysqldog.
+Create your configuration file, and pass it to `-C` flag to run cyqldog.
 
 ```bash
 $ cyqldog -C /path/to/cyqldog.yml
