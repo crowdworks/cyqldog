@@ -6,7 +6,7 @@ toolchain go1.21.3
 
 require (
 	github.com/DataDog/datadog-go v4.8.3+incompatible
-	github.com/go-sql-driver/mysql v1.7.1
+	github.com/go-sql-driver/mysql v1.8.1
 	github.com/lib/pq v1.10.9
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028
 	gopkg.in/DATA-DOG/go-sqlmock.v1 v1.3.0
@@ -14,6 +14,7 @@ require (
 )
 
 require (
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/mod v0.13.0 // indirect
