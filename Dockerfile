@@ -1,4 +1,4 @@
-FROM golang:1.22.3-bullseye AS builder
+FROM golang:1.22.3-bookworm AS builder
 
 WORKDIR /go/src/github.com/crowdworks/cyqldog
 
@@ -8,7 +8,7 @@ RUN go mod download
 COPY . .
 RUN make build
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 WORKDIR /app
 COPY --from=builder /go/src/github.com/crowdworks/cyqldog/bin/cyqldog ./bin/cyqldog
 ENTRYPOINT ["/app/bin/cyqldog"]
