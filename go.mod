@@ -1,8 +1,6 @@
 module github.com/crowdworks/cyqldog
 
-go 1.21
-
-toolchain go1.21.3
+go 1.22.3
 
 require (
 	github.com/DataDog/datadog-go v4.8.3+incompatible
