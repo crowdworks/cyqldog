@@ -1,5 +1,4 @@
-# .goreleaser.yml
-# Build customization
+version: 2
 builds:
   - binary: cyqldog
     goos:
