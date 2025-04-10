@@ -4,7 +4,7 @@ go 1.24.2
 
 require (
 	github.com/DataDog/datadog-go v4.8.3+incompatible
-	github.com/go-sql-driver/mysql v1.9.1
+	github.com/go-sql-driver/mysql v1.9.2
 	github.com/lib/pq v1.10.9
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da
 	gopkg.in/DATA-DOG/go-sqlmock.v1 v1.3.0
