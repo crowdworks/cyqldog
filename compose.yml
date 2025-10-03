@@ -16,7 +16,7 @@ services:
       - 5432:5432
     environment:
       POSTGRES_USER: "cyqldog"
-      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_DB: "cyqldogdb"
   mysql:
     image: mysql:8.0
@@ -28,7 +28,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
       MYSQL_HOST: "%"
       MYSQL_USER: "cyqldog"
-      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_PASSWORD: $DB_PASSWORD
       MYSQL_DATABASE: "cyqldogdb"
   dogstatsd:
     image: datadog/dogstatsd:7.70.2
@@ -40,12 +40,13 @@ services:
   # For Dockerfile test
   # cyqldog:
   #   build: .
-  #   command: ["bin/cyqldog", "-C", "config/local.yml"]
-  #   links:
-  #     - postgres:postgres
-  #     - dogstatsd:dogstatsd
+  #   command: ["-C", "config/local.yml"]
+  #   depends_on:
+  #     - postgres
+  #     - mysql
+  #     - dogstatsd
   #   environment:
   #     DB_HOST: "postgres"
-  #     DB_PASSWORD: "${DB_PASSWORD}"
+  #     DB_PASSWORD:
   #     DD_HOST: "dogstatsd"
-  #     DD_API_KEY: "${DD_API_KEY}"
+  #     DD_API_KEY:
