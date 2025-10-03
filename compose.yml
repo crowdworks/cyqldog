@@ -9,7 +9,7 @@ services:
       - /var/lib/mysql
 
   postgres:
-    image: postgres:14.1-alpine
+    image: postgres:17.6-alpine
     volumes_from:
       - storage-postgres
     ports:
@@ -26,15 +26,16 @@ services:
       - 3306:3306
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_HOST: "%"
       MYSQL_USER: "cyqldog"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
       MYSQL_DATABASE: "cyqldogdb"
   dogstatsd:
-    image: datadog/dogstatsd:7.44.0
+    image: datadog/dogstatsd:7.70.2
     ports:
       - "8125:8125/udp"
     environment:
-      DD_API_KEY: "${DD_API_KEY}"
+      DD_API_KEY:
 
   # For Dockerfile test
   # cyqldog:
