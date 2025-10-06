@@ -20,7 +20,7 @@ lint:
 
 .PHONY: test
 test: build
-	go test ./...
+	go test -v ./...
 
 .PHONY: check
 check: lint test
