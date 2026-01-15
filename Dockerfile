@@ -1,4 +1,4 @@
-FROM golang:1.25.1-trixie AS builder
+FROM golang:1.26rc2-trixie AS builder
 
 WORKDIR /go/src/github.com/crowdworks/cyqldog
 
