@@ -11,7 +11,7 @@ on:
 
 jobs:
   pinact_check:
-    runs-on: ubuntu-24.04-2core-arm64
+    runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
