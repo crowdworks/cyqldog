@@ -9,7 +9,7 @@ services:
       - /var/lib/mysql
 
   postgres:
-    image: postgres:17.6-alpine
+    image: postgres:17.11-alpine
     volumes_from:
       - storage-postgres
     ports:
@@ -31,7 +31,7 @@ services:
       MYSQL_PASSWORD: $DB_PASSWORD
       MYSQL_DATABASE: "cyqldogdb"
   dogstatsd:
-    image: datadog/dogstatsd:7.70.2
+    image: datadog/dogstatsd:7.83.0
     ports:
       - "8125:8125/udp"
     environment:
